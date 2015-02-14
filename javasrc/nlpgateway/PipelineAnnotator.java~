@@ -21,6 +21,7 @@ public class PipelineAnnotator {
 
 	private StanfordCoreNLP pipeline;
 	private Properties props = new Properties();
+//	private String dummyVar = new String("d");
 
 	public PipelineAnnotator() {
 		props.setProperty("annotators", "tokenize,ssplit,pos,lemma,parse,sentiment");
