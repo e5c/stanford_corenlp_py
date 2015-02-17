@@ -5,6 +5,7 @@ import java.util.*;
 
 import edu.stanford.nlp.dcoref.CorefChain;
 import edu.stanford.nlp.dcoref.CorefCoreAnnotations;
+import edu.stanford.nlp.ie.*;
 import edu.stanford.nlp.io.*;
 import edu.stanford.nlp.ling.*;
 import edu.stanford.nlp.pipeline.*;
@@ -22,20 +23,28 @@ public class PipelineAnnotator {
 	private StanfordCoreNLP pipeline;
 	private Properties props = new Properties();
 
+	// Default constructor: notably includes NER, sentiment, entitymentions
 	public PipelineAnnotator() {
-		props.setProperty("annotators", "tokenize,ssplit,pos,lemma,parse,sentiment");
+		props.setProperty("annotators", "tokenize,ssplit,pos,lemma,parse,ner,sentiment,entitymentions");
 		pipeline = new StanfordCoreNLP(props);
 	}
 
-	public LinkedHashMap<CoreMap,String> process_text(String inputType, String input) throws IOException {
+	// Custom constructor: annotatorStr must be a comma-separated list of annotators
+	public PipelineAnnotator(String annotatorStr) {
+		props.setProperty("annotators", annotatorStr);
+		pipeline = new StanfordCoreNLP(props);
+	}
+
+	// 
+	public Annotation annotateText(String inputType, String input) throws IOException {
 		//Dummy initialization
 		String text = "Maria is the best opera singer I have ever seen! However, she peaked at an early age.";
 
-		if (inputType == "file") {
+		if (inputType.equals("file")) {
 			// To do: put in try/catch block
 			text = new String(Files.readAllBytes(Paths.get(input))); //, StandardCharsets.UTF_8);
 		}
-		else if (inputType == "text") {
+		else if (inputType.equals("text")) {
 			text = input;
 		}
 		else { 
@@ -45,10 +54,13 @@ public class PipelineAnnotator {
 
 		Annotation document = new Annotation(text);
 		this.pipeline.annotate(document);
+		return document;
+	}
 
+	public LinkedHashMap<CoreMap,String> analyze_sentiment(Annotation document) {
 		List<CoreMap> sentences = document.get(CoreAnnotations.SentencesAnnotation.class);
-		
-		LinkedHashMap<CoreMap,String> sentenceSentimentMap = new LinkedHashMap();
+
+		LinkedHashMap<CoreMap,String> sentenceSentimentMap = new LinkedHashMap<CoreMap,String>();
 
 		for(CoreMap sentence: sentences) {
 			sentenceSentimentMap.put(sentence, sentence.get(SentimentCoreAnnotations.ClassName.class));
@@ -57,4 +69,36 @@ public class PipelineAnnotator {
 		return sentenceSentimentMap;
 	}
 
+	public LinkedHashMap<CoreMap,String> get_entities(Annotation document) {
+		List<CoreMap> entityMentions = document.get(CoreAnnotations.MentionsAnnotation.class);
+
+		LinkedHashMap<CoreMap,String> entityTypeMap = new LinkedHashMap<CoreMap,String>();
+
+		for(CoreMap entity: entityMentions) {
+			String type = entity.get(CoreAnnotations.NamedEntityTagAnnotation.class);
+			entityTypeMap.put(entity, type);
+		}
+
+		return entityTypeMap;
+	}
+
+	public LinkedHashMap<CoreMap,String>[] get_sentiments_entities(String inputType, String input) throws IOException {
+		Annotation document = annotateText(inputType, input);
+		LinkedHashMap<CoreMap,String> sents = analyze_sentiment(document);
+		LinkedHashMap<CoreMap,String> ents = get_entities(document);
+		LinkedHashMap[] sents_ents = new LinkedHashMap[]{sents,ents};
+		return sents_ents;
+	}
+
+	public static void write_map_to_file(LinkedHashMap map, String outputFile) throws IOException {
+		PrintWriter writer = new PrintWriter(outputFile);
+
+		Set entrySet = map.entrySet();
+		Iterator it = entrySet.iterator();
+
+		while (it.hasNext()) {
+			writer.println(it.next());
+		}
+		writer.close();
+	}
 }

@@ -15,6 +15,10 @@ import edu.stanford.nlp.util.*;
 import edu.stanford.nlp.sentiment.*;
 import py4j.GatewayServer;
 
+/*
+A class to provide Python a Java object as entry point to the JVM.
+*/
+
 public class NLPEntryPoint {
 
 	private PipelineAnnotator pipelineAnnotator;
@@ -27,10 +31,21 @@ public class NLPEntryPoint {
 		return pipelineAnnotator;
 	}
 
+	public static void write_map_to_file(LinkedHashMap map, String outputFile) throws IOException {
+		PrintWriter writer = new PrintWriter(outputFile);
+
+		Set entrySet = map.entrySet();
+		Iterator it = entrySet.iterator();
+
+		while (it.hasNext()) {
+			writer.println(it.next());
+		}
+		writer.close();
+	}
+
 	public static void main(String[] args) {
 		GatewayServer gatewayServer = new GatewayServer(new NLPEntryPoint());
 		gatewayServer.start();
 		System.out.println("Gateway Server Started");
-
 	}
 }
