@@ -31,6 +31,7 @@ public class NLPEntryPoint {
 		return pipelineAnnotator;
 	}
 
+	// Duplicated from PipelineAnnotator so that Python can access it too.
 	public static void write_map_to_file(LinkedHashMap map, String outputFile) throws IOException {
 		PrintWriter writer = new PrintWriter(outputFile);
 

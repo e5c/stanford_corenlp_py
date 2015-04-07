@@ -14,6 +14,7 @@ import edu.stanford.nlp.semgraph.SemanticGraphCoreAnnotations;
 import edu.stanford.nlp.trees.*;
 import edu.stanford.nlp.util.*;
 import edu.stanford.nlp.sentiment.*;
+import edu.stanford.nlp.neural.rnn.RNNCoreAnnotations;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -35,7 +36,7 @@ public class PipelineAnnotator {
 		pipeline = new StanfordCoreNLP(props);
 	}
 
-	// 
+	// Returns the Annotation object after the pipeline has annotated the text input of type inputType
 	public Annotation annotateText(String inputType, String input) throws IOException {
 		//Dummy initialization
 		String text = "Maria is the best opera singer I have ever seen! However, she peaked at an early age.";
@@ -57,13 +58,24 @@ public class PipelineAnnotator {
 		return document;
 	}
 
-	public LinkedHashMap<CoreMap,String> analyze_sentiment(Annotation document) {
+	public LinkedHashMap<CoreMap,String> get_sentiments(Annotation document) {
 		List<CoreMap> sentences = document.get(CoreAnnotations.SentencesAnnotation.class);
-
 		LinkedHashMap<CoreMap,String> sentenceSentimentMap = new LinkedHashMap<CoreMap,String>();
+//		String[] sentimentInfo = new String[2];
+		String sentimentInfo = "";
 
 		for(CoreMap sentence: sentences) {
-			sentenceSentimentMap.put(sentence, sentence.get(SentimentCoreAnnotations.ClassName.class));
+			//sentenceSentimentMap.put(sentence, sentence.get(SentimentCoreAnnotations.ClassName.class));
+			Tree sentimentTree = sentence.get(SentimentCoreAnnotations.AnnotatedTree.class);
+			if (sentimentTree != null) {
+				int sentiment = RNNCoreAnnotations.getPredictedClass(sentimentTree);
+				String sentimentString = Integer.toString(sentiment);
+				String sentimentClass = sentence.get(SentimentCoreAnnotations.ClassName.class);
+				sentimentInfo = sentimentString + "," + sentimentClass;
+//				sentimentInfo[0] = sentimentString;
+//				sentimentInfo[1] = sentimentClass;
+			}
+			sentenceSentimentMap.put(sentence, sentimentInfo);
 		}
 
 		return sentenceSentimentMap;
@@ -84,7 +96,7 @@ public class PipelineAnnotator {
 
 	public LinkedHashMap<CoreMap,String>[] get_sentiments_entities(String inputType, String input) throws IOException {
 		Annotation document = annotateText(inputType, input);
-		LinkedHashMap<CoreMap,String> sents = analyze_sentiment(document);
+		LinkedHashMap<CoreMap,String> sents = get_sentiments(document);
 		LinkedHashMap<CoreMap,String> ents = get_entities(document);
 		LinkedHashMap[] sents_ents = new LinkedHashMap[]{sents,ents};
 		return sents_ents;
