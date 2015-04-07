@@ -1,4 +1,0 @@
-Maria Callas=PERSON
-1983=DATE
-Dan Helfer=PERSON
-Jane Wright=PERSON

@@ -10,7 +10,7 @@ You can download py4j with pip install py4j. More info here:
 http://py4j.sourceforge.net/
 
 To start the JVM, run from this project's home directory:
-$ javac -cp .:$PY4JJAR:$CORENLP/* nlpgateway/NLPEntryPoint.java nlpgateway/PipelineAnnotator.java
+$ javac -cp .:$PY4JJAR:$CORENLP/* nlpgateway/*.java
 $ java -cp .:$PY4JJAR:$CORENLP/* nlpgateway/NLPEntryPoint
 
 where you have set the bash environment variables CORENLP and PY4JJAR as locations of the CoreNLP jars and py4j jar, respectively.
