@@ -9,8 +9,8 @@ http://nlp.stanford.edu/software/stanford-corenlp-full-2015-01-29.zip
 You can download py4j with `pip install py4j`. More info here:
 http://py4j.sourceforge.net/
 
-```bash
 To start the JVM, run from this project's home directory:
+```bash
 $ javac -cp .:$PY4JJAR:$CORENLP/* nlpgateway/*.java
 $ java -cp .:$PY4JJAR:$CORENLP/* nlpgateway/NLPEntryPoint
 ```
