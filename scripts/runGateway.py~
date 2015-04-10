@@ -23,7 +23,7 @@ annotator = gateway.entry_point.getPipelineAnnotator()
 # score is in [1,5], 5 being most positive and 1 being most negative
 # and label is "Very negative", "Negative", "Neutral","Positive","Very positive"
 # (so they pretty much carry the same information)
-path_prefix = "/.../stanford_corenlp_py/texts"
+path_prefix = "/Users/elizachang/projects/stanford_corenlp_py/texts"
 input_path_1 = "{0}/{1}".format(path_prefix, "op.txt")
 sent_path_1 = "{0}/{1}".format(path_prefix, "op_sentiments.txt")
 
