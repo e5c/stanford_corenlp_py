@@ -1,6 +1,6 @@
 # stanford_corenlp_py
 
-[Stanford's Deep Learning Sentiment Analysis](http://nlp.stanford.edu/sentiment/code.html) is the state of the art in open-source sentiment analysis as of [this paper's] publication. 
+[Stanford's Deep Learning Sentiment Analysis](http://nlp.stanford.edu/sentiment/code.html) is the state of the art in open-source sentiment analysis as of [this paper's](http://nlp.stanford.edu/~socherr/EMNLP2013_RNTN.pdf) publication. 
 
 Existing Python wrappers for [Stanford's CoreNLP package](http://nlp.stanford.edu/software/corenlp.shtml) use subprocess to run the Java pipeline from the command line; however, much of those code bases is around subprocess/socket management and by and large reinvents the functionality of an already mature Python/Java communication package called `py4j`.
 

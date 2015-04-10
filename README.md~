@@ -4,7 +4,7 @@
 
 Existing Python wrappers for [Stanford's CoreNLP package](http://nlp.stanford.edu/software/corenlp.shtml) use subprocess to run the Java pipeline from the command line; however, much of those code bases is around subprocess/socket management and by and large reinvents the functionality of an already mature Python/Java communication package called `py4j`.
 
-This provides a Python interface for calling the "sentiment" and "entitymentions" annotators of Stanford's CoreNLP Java package, current as of v. 3.5.1. It uses py4j to interact with the JVM; as such, in order to run a script like scripts/runGateway.py, you must first compile and run the Java classes creating the JVM gateway.
+This repo provides a Python interface for calling the "sentiment" and "entitymentions" annotators of Stanford's CoreNLP Java package, current as of v. 3.5.1. It uses py4j to interact with the JVM; as such, in order to run a script like scripts/runGateway.py, you must first compile and run the Java classes creating the JVM gateway.
 
 ### Requirements:  
 1. Download the CoreNLP jars here:
